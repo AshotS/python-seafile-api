@@ -2,9 +2,10 @@ import io
 import os
 import posixpath
 import re
-from seafileapi.utils import querystr, utf8lize
+from seafileapi.utils import querystr
 
 ZERO_OBJ_ID = '0000000000000000000000000000000000000000'
+
 
 class _SeafDirentBase(object):
     """Base class for :class:`SeafFile` and :class:`SeafDir`.
@@ -50,6 +51,7 @@ class _SeafDirentBase(object):
 
     def get_share_link(self):
         pass
+
 
 class SeafDir(_SeafDirentBase):
     isdir = True
@@ -122,7 +124,7 @@ class SeafDir(_SeafDirentBase):
         Return a :class:`SeafFile` object of the newly uploaded file.
         """
         name = name or os.path.basename(filepath)
-        with open(filepath, 'r') as fp:
+        with open(filepath, 'rb') as fp:
             return self.upload(fp, name)
 
     def _get_upload_link(self):
@@ -145,7 +147,7 @@ class SeafDir(_SeafDirentBase):
         self.entries = [self._load_dirent(entry_json) for entry_json in dirents_json]
 
     def _load_dirent(self, dirent_json):
-        dirent_json = utf8lize(dirent_json)
+        dirent_json = dirent_json
         path = posixpath.join(self.path, dirent_json['name'])
         if dirent_json['type'] == 'file':
             return SeafFile(self.repo, path, dirent_json['id'], dirent_json['size'])
@@ -157,22 +159,24 @@ class SeafDir(_SeafDirentBase):
         if self.entries is None:
             self.load_entries()
         return len(self.entries) if self.entries is not None else 0
-    
+
     def __str__(self):
         return 'SeafDir[repo=%s,path=%s,entries=%s]' % \
-            (self.repo.id[:6], self.path, self.num_entries)
+               (self.repo.id[:6], self.path, self.num_entries)
 
     __repr__ = __str__
 
+
 class SeafFile(_SeafDirentBase):
     isdir = False
+
     def update(self, fileobj):
         """Update the content of this file"""
         pass
 
     def __str__(self):
         return 'SeafFile[repo=%s,path=%s,size=%s]' % \
-            (self.repo.id[:6], self.path, self.size)
+               (self.repo.id[:6], self.path, self.size)
 
     def _get_download_link(self):
         url = '/api2/repos/%s/file/' % self.repo.id + querystr(p=self.path)

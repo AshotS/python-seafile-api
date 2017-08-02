@@ -1,8 +1,7 @@
-#coding: UTF-8
-
 import pytest
 
 from tests.utils import randstring, datafile, filesize
+
 
 @pytest.mark.parametrize('parentpath', [
     '/',
@@ -80,11 +79,13 @@ def test_upload_file(repo, parentpath):
     testfile.delete()
     assert len(parentdir.ls(force_refresh=True)) == 0
 
+
 def test_upload_string_as_file_content(repo):
     # test pass as string as file content when upload file
     rootdir = repo.get_dir('/')
-    fname = u'testfile-%s' % randstring()
-    fcontent = 'line 1\nline 2\n\r'
+    fname = 'testfile-%s' % randstring()
+    fcontent = str.encode('line 1\nline 2\n\r')
     f = rootdir.upload(fcontent, fname)
     assert f.name == fname
     assert f.get_content() == fcontent
+memoryview

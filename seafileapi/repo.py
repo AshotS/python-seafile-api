@@ -1,12 +1,14 @@
-from urllib import urlencode
-from seafileapi.utils import utf8lize
+from urllib import parse
+
 from seafileapi.files import SeafDir, SeafFile
 from seafileapi.utils import raise_does_not_exist
+
 
 class Repo(object):
     """
     A seafile library
     """
+
     def __init__(self, client, repo_id, repo_name, repo_desc,
                  encrypted, owner, perm):
         self.client = client
@@ -19,8 +21,6 @@ class Repo(object):
 
     @classmethod
     def from_json(cls, client, repo_json):
-        repo_json = utf8lize(repo_json)
-
         repo_id = repo_json['id']
         repo_name = repo_json['name']
         repo_desc = repo_json['desc']
@@ -41,7 +41,7 @@ class Repo(object):
         """
         assert path.startswith('/')
         url = '/api2/repos/%s/file/detail/' % self.id
-        query = '?' + urlencode(dict(p=path))
+        query = '?' + parse.urlencode(dict(p=path))
         file_json = self.client.get(url + query).json()
 
         return SeafFile(self, path, file_json['id'], file_json['size'])
@@ -54,7 +54,7 @@ class Repo(object):
         """
         assert path.startswith('/')
         url = '/api2/repos/%s/dir/' % self.id
-        query = '?' + urlencode(dict(p=path))
+        query = '?' + parse.urlencode(dict(p=path))
         resp = self.client.get(url + query)
         dir_id = resp.headers['oid']
         dir_json = resp.json()
@@ -91,6 +91,7 @@ class Repo(object):
 
     def restore(self, commit_id):
         pass
+
 
 class RepoRevision(object):
     def __init__(self, client, repo, commit_id):

@@ -1,6 +1,7 @@
 from seafileapi.repo import Repo
 from seafileapi.utils import raise_does_not_exist
 
+
 class Repos(object):
     def __init__(self, client):
         self.client = client
@@ -23,4 +24,4 @@ class Repos(object):
 
     def list_repos(self):
         repos_json = self.client.get('/api2/repos/').json()
-        return  [Repo.from_json(self.client, j) for j in repos_json]
+        return [Repo.from_json(self.client, j) for j in repos_json]

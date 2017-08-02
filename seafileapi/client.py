@@ -2,9 +2,12 @@ import requests
 from seafileapi.utils import urljoin
 from seafileapi.exceptions import ClientHttpError
 from seafileapi.repos import Repos
+from seafileapi.admin import SeafileAdmin
+
 
 class SeafileApiClient(object):
     """Wraps seafile web api"""
+
     def __init__(self, server, username=None, password=None, token=None):
         """Wraps various basic operations to interact with seahub http api.
         """
@@ -12,6 +15,8 @@ class SeafileApiClient(object):
         self.username = username
         self.password = password
         self._token = token
+
+        self.admin = SeafileAdmin(self)
 
         self.repos = Repos(self)
         self.groups = Groups(self)
@@ -43,11 +48,15 @@ class SeafileApiClient(object):
     def post(self, *args, **kwargs):
         return self._send_request('POST', *args, **kwargs)
 
+    def put(self, *args, **kwargs):
+        kwargs.update({'expected': (200, 201)})
+        return self._send_request('PUT', *args, **kwargs)
+
     def delete(self, *args, **kwargs):
-        return self._send_request('delete', *args, **kwargs)
+        return self._send_request('DELETE', *args, **kwargs)
 
     def _send_request(self, method, url, *args, **kwargs):
-        if not url.startswith('http'):
+        if not url.startswith('http') or url.startswith('https'):
             url = urljoin(self.server, url)
 
         headers = kwargs.get('headers', {})
@@ -56,8 +65,10 @@ class SeafileApiClient(object):
 
         expected = kwargs.pop('expected', 200)
         if not hasattr(expected, '__iter__'):
-            expected = (expected, )
-        resp = requests.request(method, url, *args, **kwargs)
+            expected = (expected,)
+        print(kwargs)
+        resp = requests.request(method, url, **kwargs)
+        print(resp.text)
         if resp.status_code not in expected:
             msg = 'Expected %s, but get %s' % \
                   (' or '.join(map(str, expected)), resp.status_code)
@@ -72,3 +83,7 @@ class Groups(object):
 
     def create_group(self, name):
         pass
+
+
+class API_Urls:
+    urls = ['accounts', 'auth-token', ]
