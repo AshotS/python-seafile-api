@@ -60,7 +60,7 @@ class SeafileAdmin:
         return Account(email, self.client)
 
     def create_account(self, email, password):
-        account = Account(self.client, email, password)
+        account = Account(self.client, email, password=password)
         account.create()
         return account
 

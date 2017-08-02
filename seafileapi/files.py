@@ -147,7 +147,6 @@ class SeafDir(_SeafDirentBase):
         self.entries = [self._load_dirent(entry_json) for entry_json in dirents_json]
 
     def _load_dirent(self, dirent_json):
-        dirent_json = dirent_json
         path = posixpath.join(self.path, dirent_json['name'])
         if dirent_json['type'] == 'file':
             return SeafFile(self.repo, path, dirent_json['id'], dirent_json['size'])
