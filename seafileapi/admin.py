@@ -32,6 +32,7 @@ class Account:
         if self.password:
             data.update({'password': self.password})
         self.client.put(self.ACCOUNT_URL, data=data)
+        self.__init__(self.client, self.email)
 
     def delete(self):
         self.client.delete(self.ACCOUNT_URL)
