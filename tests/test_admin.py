@@ -30,7 +30,8 @@ def test_cud_account(client, email, password, Account, name):
     test_account.storage = size
     test_account.update()
     assert test_account.name == name
-    assert test_account.storage == size
+    assert test_account.storage == size * 1000000
+
     # delete account
     test_account.delete()
     assert test_account.email not in [i['email'] for i in client.admin.lists_accounts()]

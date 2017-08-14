@@ -3,6 +3,7 @@ from seafileapi.utils import urljoin
 from seafileapi.exceptions import ClientHttpError
 from seafileapi.repos import Repos
 from seafileapi.admin import SeafileAdmin
+from seafileapi.groups import Groups
 
 
 class SeafileApiClient(object):
@@ -66,24 +67,10 @@ class SeafileApiClient(object):
         expected = kwargs.pop('expected', 200)
         if not hasattr(expected, '__iter__'):
             expected = (expected,)
-        print(kwargs)
         resp = requests.request(method, url, **kwargs)
-        print(resp.text)
         if resp.status_code not in expected:
             msg = 'Expected %s, but get %s' % \
                   (' or '.join(map(str, expected)), resp.status_code)
             raise ClientHttpError(resp.status_code, msg)
 
         return resp
-
-
-class Groups(object):
-    def __init__(self, client):
-        pass
-
-    def create_group(self, name):
-        pass
-
-
-class API_Urls:
-    urls = ['accounts', 'auth-token', ]

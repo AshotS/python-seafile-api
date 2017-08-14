@@ -20,6 +20,11 @@ class Account:
         self.name = account_info.get('name', None)
         self.note = account_info.get('note', None)
 
+    def __str__(self):
+        return 'SeafileAccount[id={}, user={}]'.format(self.id, self.email)
+
+    __repr__ = __str__
+
     def get_info(self):
         return self.client.get(self.ACCOUNT_URL.format(self.email)).json()
 
@@ -53,8 +58,8 @@ class SeafileAdmin:
     def __init__(self, client):
         self.client = client
 
-    def lists_accounts(self, limit=100):
-        return self.client.get(self.ACCOUNTS_URL, {'start': 0, 'limit': limit}).json()
+    def lists_accounts(self, start=0, limit=100):
+        return self.client.get(self.ACCOUNTS_URL, {'start': start, 'limit': limit}).json()
 
     @raise_does_not_exist('The requested account does not exist')
     def get_account(self, email):
