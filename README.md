@@ -1,6 +1,8 @@
-[![Build Status](https://secure.travis-ci.org/haiwen/python-seafile.svg?branch=master)](http://travis-ci.org/haiwen/python-seafile)
-
 python-seafile
 ==============
+This is fork of https://github.com/haiwen/python-seafile with support some additional features. Like a manipulating accounts and groups (create, update, delete).
 
-python client for seafile web api
+Requirements
+==============
+- Python 3.x
+- `Requests <http://www.python-requests.org/en/latest/>`
