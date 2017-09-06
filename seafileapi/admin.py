@@ -9,16 +9,16 @@ class Account:
 
         account_info = kwargs or self.get_info()
 
-        self.id = account_info.get('id', None)
-        self.password = account_info.get('password', None)
+        self.id = account_info.get('id')
+        self.password = account_info.get('password')
         self.is_staff = account_info.get('is_staff', False)
         self.is_active = account_info.get('is_active', True)
-        self.usage = account_info.get('usage', None)
+        self.usage = account_info.get('usage')
         self.storage = int(account_info.get('total', 0))
         self.create_time = tsstr_sec(account_info.get('create_time', 0))
-        self.department = account_info.get('department', None)
-        self.name = account_info.get('name', None)
-        self.note = account_info.get('note', None)
+        self.department = account_info.get('department')
+        self.name = account_info.get('name')
+        self.note = account_info.get('note')
 
     def __str__(self):
         return 'SeafileAccount[id={}, user={}]'.format(self.id, self.email)
