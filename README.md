@@ -1,4 +1,4 @@
-python-seafile
+python-seafile-api
 ==============
 This is fork of https://github.com/haiwen/python-seafile with support some additional features. Like a manipulating accounts and groups (create, update, delete).
 
