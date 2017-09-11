@@ -5,11 +5,11 @@ import seafileapi
 from tests.utils import randstring
 from seafileapi.admin import Account
 
-SERVER = os.environ.get('SEAFILE_TEST_SERVER_ADDRESS', 'http://address:8000')
-USER = os.environ.get('SEAFILE_TEST_USERNAME', 'test@stest.com')
-PASSWORD = os.environ.get('SEAFILE_TEST_PASSWORD', 'password')
-ADMIN_USER = os.environ.get('SEAFILE_TEST_ADMIN_USERNAME', 'admin@test.com')
-ADMIN_PASSWORD = os.environ.get('SEAFILE_TEST_ADMIN_PASSWORD', 'password')
+SERVER = os.environ.get('SEAFILE_TEST_SERVER_ADDRESS', 'http://192.168.1.100:8000')
+USER = os.environ.get('SEAFILE_TEST_USERNAME', 'sdsd@sdfsds.ru')
+PASSWORD = os.environ.get('SEAFILE_TEST_PASSWORD', '4368906oo')
+ADMIN_USER = os.environ.get('SEAFILE_TEST_ADMIN_USERNAME', 'sdsd@sdfsds.ru')
+ADMIN_PASSWORD = os.environ.get('SEAFILE_TEST_ADMIN_PASSWORD', '4368906oo')
 
 
 @pytest.fixture(scope='session')

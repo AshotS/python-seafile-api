@@ -4,8 +4,7 @@ from tests.utils import randstring
 
 
 def test_accounts_list(client):
-    accounts = client.admin.lists_accounts()
-    print(accounts)
+    accounts = client.admin.list_accounts()
     assert len(accounts) > 0
 
 
@@ -16,7 +15,7 @@ def test_server_info(client):
 
 @pytest.mark.parametrize('password', [randstring(6)])
 @pytest.mark.parametrize('name', [randstring(6)])
-@pytest.mark.parametrize('email', ['qwerty@asdf.com'])
+@pytest.mark.parametrize('email', ['{}@test.com'.format(randstring(6))])
 def test_cud_account(client, email, password, Account, name):
     # create account
     test_account = client.admin.create_account(email, password)
@@ -31,7 +30,7 @@ def test_cud_account(client, email, password, Account, name):
     test_account.update()
     assert test_account.name == name
     assert test_account.storage == size * 1000000
-
+    assert test_account in client.admin.list_accounts()
     # delete account
     test_account.delete()
-    assert test_account.email not in [i['email'] for i in client.admin.lists_accounts()]
+    assert test_account not in client.admin.list_accounts()

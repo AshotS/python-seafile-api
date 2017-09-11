@@ -55,12 +55,12 @@ def test_upload_file(repo, parentpath):
     else:
         parentdir = rootdir.mkdir(parentpath[1:])
 
-    fname = 'aliedit.tar.gz'
+    fname = 'test.jpg'
     fpath = datafile(fname)
-    with open(fpath, 'r') as fp:
+    with open(fpath, 'rb') as fp:
         testfile = parentdir.upload(fp, fname)
 
-    with open(fpath, 'r') as fp:
+    with open(fpath, 'rb') as fp:
         fcontent = fp.read()
 
     assert testfile.size == filesize(fpath)
@@ -88,4 +88,3 @@ def test_upload_string_as_file_content(repo):
     f = rootdir.upload(fcontent, fname)
     assert f.name == fname
     assert f.get_content() == fcontent
-memoryview
