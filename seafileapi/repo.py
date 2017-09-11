@@ -4,7 +4,7 @@ from seafileapi.files import SeafDir, SeafFile
 from seafileapi.utils import raise_does_not_exist
 
 
-class Repo(object):
+class Repo:
     """
     A seafile library
     """
@@ -93,7 +93,7 @@ class Repo(object):
         pass
 
 
-class RepoRevision(object):
+class RepoRevision:
     def __init__(self, client, repo, commit_id):
         self.client = client
         self.repo = repo

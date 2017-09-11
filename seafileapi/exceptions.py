@@ -3,7 +3,7 @@ class ClientHttpError(Exception):
     expected"""
 
     def __init__(self, code, message):
-        super(ClientHttpError, self).__init__()
+        super().__init__()
         self.code = code
         self.message = message
 
@@ -20,7 +20,7 @@ class DoesNotExist(Exception):
     """Raised when not matching resource can be found."""
 
     def __init__(self, msg):
-        super(DoesNotExist, self).__init__()
+        super().__init__()
         self.msg = msg
 
     def __str__(self):

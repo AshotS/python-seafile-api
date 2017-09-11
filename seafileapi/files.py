@@ -7,12 +7,15 @@ from seafileapi.utils import querystr
 ZERO_OBJ_ID = '0000000000000000000000000000000000000000'
 
 
-class _SeafDirentBase(object):
+class _SeafDirentBase:
     """Base class for :class:`SeafFile` and :class:`SeafDir`.
 
     It provides implementation of their common operations.
     """
     isdir = None
+
+    REPOS_FILE_URL = '/api2/repos/{}/file/{}'
+    REPOS_DIR_URL = '/api2/repos/{}/dir/{}'
 
     def __init__(self, repo, path, object_id, size=0):
         """
@@ -36,7 +39,7 @@ class _SeafDirentBase(object):
 
     def delete(self):
         suffix = 'dir' if self.isdir else 'file'
-        url = '/api2/repos/%s/%s/' % (self.repo.id, suffix) + querystr(p=self.path)
+        url = '/api2/repos/{}/{}/{}'.format(self.repo.id, suffix, querystr(p=self.path))
         resp = self.client.delete(url)
         return resp
 
@@ -77,7 +80,7 @@ class SeafDir(_SeafDirentBase):
         """
         # TODO: file name validation
         path = posixpath.join(self.path, name)
-        url = '/api2/repos/%s/file/' % self.repo.id + querystr(p=path, reloaddir='true')
+        url = self.REPOS_FILE_URL.format(self.repo.id, querystr(p=path, reloaddir='true'))
         postdata = {'operation': 'create'}
         resp = self.client.post(url, data=postdata)
         self.id = resp.headers['oid']
@@ -90,7 +93,7 @@ class SeafDir(_SeafDirentBase):
         Return a :class:`SeafDir` object of the newly created sub folder.
         """
         path = posixpath.join(self.path, name)
-        url = '/api2/repos/%s/dir/' % self.repo.id + querystr(p=path, reloaddir='true')
+        url = self.REPOS_DIR_URL.format(self.repo.id, querystr(p=path, reloaddir='true'))
         postdata = {'operation': 'mkdir'}
         resp = self.client.post(url, data=postdata)
         self.id = resp.headers['oid']
@@ -105,8 +108,6 @@ class SeafDir(_SeafDirentBase):
 
         Return a :class:`SeafFile` object of the newly uploaded file.
         """
-        if isinstance(fileobj, str):
-            fileobj = io.BytesIO(fileobj)
         upload_url = self._get_upload_link()
         files = {
             'file': (filename, fileobj),
@@ -128,7 +129,7 @@ class SeafDir(_SeafDirentBase):
             return self.upload(fp, name)
 
     def _get_upload_link(self):
-        url = '/api2/repos/%s/upload-link/' % self.repo.id
+        url = '/api2/repos/{}/upload-link/'.format(self.repo.id)
         resp = self.client.get(url)
         return re.match(r'"(.*)"', resp.text).group(1)
 
@@ -141,7 +142,7 @@ class SeafDir(_SeafDirentBase):
 
     def load_entries(self, dirents_json=None):
         if dirents_json is None:
-            url = '/api2/repos/%s/dir/' % self.repo.id + querystr(p=self.path)
+            url = self.REPOS_DIR_URL.format(self.repo.id, querystr(p=self.path))
             dirents_json = self.client.get(url).json()
 
         self.entries = [self._load_dirent(entry_json) for entry_json in dirents_json]
@@ -160,8 +161,7 @@ class SeafDir(_SeafDirentBase):
         return len(self.entries) if self.entries is not None else 0
 
     def __str__(self):
-        return 'SeafDir[repo=%s,path=%s,entries=%s]' % \
-               (self.repo.id[:6], self.path, self.num_entries)
+        return 'SeafDir<repo={},path={},entries={}>'.format(self.repo.id[:6], self.path, self.num_entries)
 
     __repr__ = __str__
 
@@ -174,11 +174,10 @@ class SeafFile(_SeafDirentBase):
         pass
 
     def __str__(self):
-        return 'SeafFile[repo=%s,path=%s,size=%s]' % \
-               (self.repo.id[:6], self.path, self.size)
+        return 'SeafFile<repo={},path={},size={}>'.format(self.repo.id[:6], self.path, self.size)
 
     def _get_download_link(self):
-        url = '/api2/repos/%s/file/' % self.repo.id + querystr(p=self.path)
+        url = self.REPOS_FILE_URL.format(self.repo.id, querystr(p=self.path))
         resp = self.client.get(url)
         return re.match(r'"(.*)"', resp.text).group(1)
 

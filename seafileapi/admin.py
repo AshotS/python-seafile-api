@@ -20,13 +20,22 @@ class Account:
         self.name = account_info.get('name')
         self.note = account_info.get('note')
 
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __hash__(self):
+        return hash(self.id)
+
     def __str__(self):
-        return 'SeafileAccount[id={}, user={}]'.format(self.id, self.email)
+        return 'SeafileAccount<id={}, user={}>'.format(self.id, self.email)
 
     __repr__ = __str__
 
     def get_info(self):
-        return self.client.get(self.ACCOUNT_URL.format(self.email)).json()
+        return self.client.get(self.ACCOUNT_URL).json()
 
     def create(self):
         data = {'password': self.password, 'is_staff': self.is_staff, 'is_active': self.is_active}
@@ -58,8 +67,9 @@ class SeafileAdmin:
     def __init__(self, client):
         self.client = client
 
-    def lists_accounts(self, start=0, limit=100):
-        return self.client.get(self.ACCOUNTS_URL, {'start': start, 'limit': limit}).json()
+    def list_accounts(self, start=0, limit=100):
+        accounts = self.client.get(self.ACCOUNTS_URL, {'start': start, 'limit': limit}).json()
+        return [Account(self.client, email=account['email']) for account in accounts]
 
     @raise_does_not_exist('The requested account does not exist')
     def get_account(self, email):

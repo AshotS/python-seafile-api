@@ -39,7 +39,7 @@ class SeafileApiClient(object):
         self._token = token
 
     def __str__(self):
-        return 'SeafileApiClient[server=%s, user=%s]' % (self.server, self.username)
+        return 'SeafileApiClient<server={}, user={}>'.format(self.server, self.username)
 
     __repr__ = __str__
 
@@ -47,6 +47,7 @@ class SeafileApiClient(object):
         return self._send_request('GET', *args, **kwargs)
 
     def post(self, *args, **kwargs):
+        kwargs.update({'expected': (200, 201)})
         return self._send_request('POST', *args, **kwargs)
 
     def put(self, *args, **kwargs):
@@ -61,7 +62,7 @@ class SeafileApiClient(object):
             url = urljoin(self.server, url)
 
         headers = kwargs.get('headers', {})
-        headers.setdefault('Authorization', 'Token ' + self._token)
+        headers.setdefault('Authorization', 'Token {}'.format(self._token))
         kwargs['headers'] = headers
 
         expected = kwargs.pop('expected', 200)
@@ -69,8 +70,7 @@ class SeafileApiClient(object):
             expected = (expected,)
         resp = requests.request(method, url, **kwargs)
         if resp.status_code not in expected:
-            msg = 'Expected %s, but get %s' % \
-                  (' or '.join(map(str, expected)), resp.status_code)
+            msg = 'Expected {}, but get {}'.format(' or '.join(map(str, expected)), resp.status_code)
             raise ClientHttpError(resp.status_code, msg)
 
         return resp

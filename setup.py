@@ -1,15 +1,13 @@
 from setuptools import setup, find_packages
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 setup(name='seafileapi',
       version=__version__,
       license='BSD',
       description='Client interface for Seafile Web API',
-      author='Shuai Lin',
-      author_email='linshuai2012@gmail.com',
-      url='http://seafile.com',
+      author='AshotS',
       platforms=['Any'],
       packages=find_packages(),
       install_requires=['requests'],
