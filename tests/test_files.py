@@ -28,6 +28,9 @@ def test_create_delete_file_dir(repo, parentpath):
     assert entry.id == testfile.id
     assert entry.size == testfile.size
 
+    testfile.star_file()
+    testfile.unstar_file()
+
     # create a folder
     testdir = parentdir.mkdir('测试目录-%s' % randstring())
     assert len(parentdir.ls()) == 2
@@ -75,6 +78,7 @@ def test_upload_file(repo, parentpath):
     assert entry.path == testfile.path
     assert entry.id == testfile.id
     assert entry.size == testfile.size
+
 
     testfile.delete()
     assert len(parentdir.ls(force_refresh=True)) == 0

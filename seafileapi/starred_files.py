@@ -11,4 +11,4 @@ class StarredFiles:
         self.client.post(self.STARRED_FILES_URL, data={'repo_id': repo_id, 'p': path})
 
     def unstar_file(self, repo_id, path):
-        self.client.delete(self.STARRED_FILES_URL, data={'repo_id': repo_id, 'p': path})
+        self.client.delete(self.STARRED_FILES_URL + '?repo_id={}&p={}'.format(repo_id, path))

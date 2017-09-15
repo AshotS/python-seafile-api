@@ -186,4 +186,10 @@ class SeafFile(_SeafDirentBase):
         url = self._get_download_link()
         return self.client.get(url).content
 
+    def star_file(self):
+        self.client.starredfiles.star_file(self.repo.id, self.path)
+
+    def unstar_file(self):
+        self.client.starredfiles.unstar_file(self.repo.id, self.path)
+
     __repr__ = __str__
