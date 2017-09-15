@@ -4,7 +4,7 @@ from seafileapi.exceptions import ClientHttpError
 from seafileapi.repos import Repos
 from seafileapi.admin import SeafileAdmin
 from seafileapi.groups import Groups
-
+from seafileapi.starred_files import StarredFiles
 
 class SeafileApiClient(object):
     """Wraps seafile web api"""
@@ -21,6 +21,7 @@ class SeafileApiClient(object):
 
         self.repos = Repos(self)
         self.groups = Groups(self)
+        self.starredfiles = StarredFiles(self)
 
         if token is None:
             self._get_token()

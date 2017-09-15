@@ -11,7 +11,7 @@ PASSWORD = os.environ.get('SEAFILE_TEST_PASSWORD', 'password')
 ADMIN_USER = os.environ.get('SEAFILE_TEST_ADMIN_USERNAME', 'admin@test.com')
 ADMIN_PASSWORD = os.environ.get('SEAFILE_TEST_ADMIN_PASSWORD', 'password')
 
-
+print(os.environ.items())
 @pytest.fixture(scope='session')
 def client():
     return seafileapi.connect(SERVER, USER, PASSWORD)
@@ -31,3 +31,13 @@ def repo(client):
         yield repo
     finally:
         repo.delete()
+
+
+@pytest.yield_fixture(scope='function')
+def group(client):
+    group_name = randstring()
+    group = client.groups.add_group(group_name)
+    try:
+        yield group
+    finally:
+        group.delete()

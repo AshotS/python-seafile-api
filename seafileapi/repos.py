@@ -1,3 +1,4 @@
+import json
 from seafileapi.repo import Repo
 from seafileapi.utils import raise_does_not_exist
 

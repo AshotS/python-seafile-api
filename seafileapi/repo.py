@@ -8,6 +8,7 @@ class Repo:
     """
     A seafile library
     """
+    __slots__ = ('client', 'id', 'name', 'desc', 'encrypted', 'owner', 'perm')
 
     def __init__(self, client, repo_id, repo_name, repo_desc,
                  encrypted, owner, perm):
@@ -18,6 +19,11 @@ class Repo:
         self.encrypted = encrypted
         self.owner = owner
         self.perm = perm
+
+    def __str__(self):
+        return 'SefileRepo<id={}, name={}>'.format(self.id, self.name)
+
+    __repr__ = __str__
 
     @classmethod
     def from_json(cls, client, repo_json):
@@ -71,7 +77,8 @@ class Repo:
 
         Returns a list of :class:`RepoRevision` object.
         """
-        pass
+        res = self.client.get('/api/v2.1/repos/{}/history/'.format(self.id)).json()
+        return [RepoRevision(self.client, **repo) for repo in res['data']]
 
     ## Operations only the repo owner can do:
 
@@ -94,10 +101,18 @@ class Repo:
 
 
 class RepoRevision:
-    def __init__(self, client, repo, commit_id):
-        self.client = client
-        self.repo = repo
-        self.commit_id = commit_id
+    __slots__ = ('client', 'repo', 'commit_id', 'time')
+
+    def __init__(self, client, **kwargs):
+        self.client = kwargs.get('client')
+        self.repo = kwargs.get('repo')
+        self.commit_id = kwargs.get('commit_id')
+        self.time = kwargs.get('time')
+
+    def __str__(self):
+        return 'SefileRepoRevision<repo={}, commit_id={}>'.format(self.repo, self.commit_id)
+
+    __repr__ = __str__
 
     def restore(self):
         """Restore the repo to this revision"""

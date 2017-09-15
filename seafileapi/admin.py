@@ -2,6 +2,11 @@ from seafileapi.utils import raise_does_not_exist, tsstr_sec
 
 
 class Account:
+    __slots__ = (
+        'client', 'id', 'email', 'password', 'is_staff',
+        'is_active', 'usage', 'storage', 'create_time',
+        'department', 'name', 'note', 'ACCOUNT_URL')
+
     def __init__(self, client, email, **kwargs):
         self.client = client
         self.email = email
@@ -52,7 +57,7 @@ class Account:
         self.client.delete(self.ACCOUNT_URL)
 
     def migrate(self, **kwargs):
-        pass
+        raise NotImplemented
 
     def set_quota(self, limit):
         self.client.put(self.ACCOUNT_URL, data={'storage': limit})
