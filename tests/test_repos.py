@@ -1,6 +1,7 @@
 import pytest
 
 from seafileapi.exceptions import DoesNotExist
+from seafileapi.repo import RepoRevision
 from tests.utils import randstring
 
 
@@ -23,6 +24,12 @@ def test_list_repos(client):
     repos = client.repos.list_repos()
     for repo in repos:
         assert len(repo.id) == 36
+
+
+def test_list_repo_revision(client):
+    repo = _create_repo(client)
+    revisions = repo.list_revisions()
+    assert isinstance(revisions[0], RepoRevision)
 
 
 def _create_repo(client, password=None):

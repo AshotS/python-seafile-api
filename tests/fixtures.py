@@ -41,3 +41,19 @@ def group(client):
         yield group
     finally:
         group.delete()
+
+@pytest.yield_fixture(scope='function')
+def test_account1(client):
+    test_account = client.admin.create_account('{}@test.com'.format(randstring(6)), randstring(6))
+    try:
+        yield test_account
+    finally:
+        test_account.delete()
+
+@pytest.yield_fixture(scope='function')
+def test_account2(client):
+    test_account = client.admin.create_account('{}@test.com'.format(randstring(6)), randstring(6))
+    try:
+        yield test_account
+    finally:
+        test_account.delete()

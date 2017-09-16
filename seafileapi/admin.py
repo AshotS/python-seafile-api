@@ -26,7 +26,7 @@ class Account:
         self.note = account_info.get('note')
 
     def __eq__(self, other):
-        return self.id == other.id
+        return self.email == other.email
 
     def __ne__(self, other):
         return not self == other
@@ -78,7 +78,7 @@ class SeafileAdmin:
 
     @raise_does_not_exist('The requested account does not exist')
     def get_account(self, email):
-        return Account(email, self.client)
+        return Account(self.client, email)
 
     def create_account(self, email, password):
         account = Account(self.client, email, password=password)

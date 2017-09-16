@@ -7,12 +7,23 @@ from seafileapi.exceptions import ClientHttpError, DoesNotExist
 
 
 def randstring(length=0):
+    """
+
+    :param length:
+    :return:
+    """
     if length == 0:
         length = random.randint(1, 30)
     return ''.join(random.choice(string.ascii_lowercase) for _ in range(length))
 
 
 def urljoin(base, *args):
+    """
+
+    :param base:
+    :param args:
+    :return:
+    """
     url = base
     if url[-1] != '/':
         url += '/'
@@ -29,8 +40,20 @@ def raise_does_not_exist(msg):
     :exc:`DoesNotExist` exception."""
 
     def decorator(func):
+        """
+
+        :param func:
+        :return:
+        """
+
         @wraps(func)
         def wrapped(*args, **kwargs):
+            """
+
+            :param args:
+            :param kwargs:
+            :return:
+            """
             try:
                 return func(*args, **kwargs)
             except ClientHttpError as e:
@@ -45,6 +68,11 @@ def raise_does_not_exist(msg):
 
 
 def querystr(**kwargs):
+    """
+
+    :param kwargs:
+    :return:
+    """
     return '?' + parse.urlencode(kwargs)
 
 

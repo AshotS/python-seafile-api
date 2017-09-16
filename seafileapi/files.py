@@ -1,4 +1,3 @@
-import io
 import os
 import posixpath
 import re
@@ -32,31 +31,61 @@ class _SeafDirentBase:
 
     @property
     def name(self):
+        """
+
+        :return:
+        """
         return posixpath.basename(self.path)
 
     def list_revisions(self):
+        """
+
+        """
         pass
 
     def delete(self):
+        """
+
+        :return:
+        """
         suffix = 'dir' if self.isdir else 'file'
         url = '/api2/repos/{}/{}/{}'.format(self.repo.id, suffix, querystr(p=self.path))
         resp = self.client.delete(url)
         return resp
 
     def rename(self):
+        """
+
+        """
         pass
 
     def copyTo(self, dst_dir, dst_repo=None):
+        """
+
+        :param dst_dir:
+        :param dst_repo:
+        """
         pass
 
     def moveTo(self, dst_dir, dst_repo=None):
+        """
+
+        :param dst_dir:
+        :param dst_repo:
+        """
         pass
 
     def get_share_link(self):
+        """
+
+        """
         pass
 
 
 class SeafDir(_SeafDirentBase):
+    """
+
+    """
     isdir = True
 
     def __init__(self, *args, **kwargs):
@@ -141,6 +170,10 @@ class SeafDir(_SeafDirentBase):
         pass
 
     def load_entries(self, dirents_json=None):
+        """
+
+        :param dirents_json:
+        """
         if dirents_json is None:
             url = self.REPOS_DIR_URL.format(self.repo.id, querystr(p=self.path))
             dirents_json = self.client.get(url).json()
@@ -156,6 +189,10 @@ class SeafDir(_SeafDirentBase):
 
     @property
     def num_entries(self):
+        """
+
+        :return:
+        """
         if self.entries is None:
             self.load_entries()
         return len(self.entries) if self.entries is not None else 0
@@ -187,9 +224,15 @@ class SeafFile(_SeafDirentBase):
         return self.client.get(url).content
 
     def star_file(self):
+        """
+
+        """
         self.client.starredfiles.star_file(self.repo.id, self.path)
 
     def unstar_file(self):
+        """
+
+        """
         self.client.starredfiles.unstar_file(self.repo.id, self.path)
 
     __repr__ = __str__

@@ -20,6 +20,7 @@ def test_cud_account(client, email, password, Account, name):
     # create account
     test_account = client.admin.create_account(email, password)
     assert isinstance(test_account, Account)
+    assert client.admin.get_account(test_account.email) == test_account
 
     # upadte account fields
     size = 100
@@ -31,6 +32,9 @@ def test_cud_account(client, email, password, Account, name):
     assert test_account.name == name
     assert test_account.storage == size * 1000000
     assert test_account in client.admin.list_accounts()
+    test_account.set_quota(999)
+    assert test_account.get_info()['total'] == 999 * 1000000
+
     # delete account
     test_account.delete()
     assert test_account not in client.admin.list_accounts()

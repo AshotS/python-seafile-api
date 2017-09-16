@@ -6,7 +6,8 @@ from seafileapi.admin import SeafileAdmin
 from seafileapi.groups import Groups
 from seafileapi.starred_files import StarredFiles
 
-class SeafileApiClient(object):
+
+class SeafileApiClient:
     """Wraps seafile web api"""
 
     def __init__(self, server, username=None, password=None, token=None):
@@ -45,17 +46,41 @@ class SeafileApiClient(object):
     __repr__ = __str__
 
     def get(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return self._send_request('GET', *args, **kwargs)
 
     def post(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         kwargs.update({'expected': (200, 201)})
         return self._send_request('POST', *args, **kwargs)
 
     def put(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         kwargs.update({'expected': (200, 201)})
         return self._send_request('PUT', *args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return self._send_request('DELETE', *args, **kwargs)
 
     def _send_request(self, method, url, *args, **kwargs):

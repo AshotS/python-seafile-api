@@ -27,6 +27,12 @@ class Repo:
 
     @classmethod
     def from_json(cls, client, repo_json):
+        """
+
+        :param client:
+        :param repo_json:
+        :return:
+        """
         repo_id = repo_json['id']
         repo_name = repo_json['name']
         repo_desc = repo_json['desc']
@@ -37,6 +43,10 @@ class Repo:
         return cls(client, repo_id, repo_name, repo_desc, encrypted, owner, perm)
 
     def is_readonly(self):
+        """
+
+        :return:
+        """
         return 'w' not in self.perm
 
     @raise_does_not_exist('The requested file does not exist')
@@ -64,23 +74,23 @@ class Repo:
         resp = self.client.get(url + query)
         dir_id = resp.headers['oid']
         dir_json = resp.json()
-        dir = SeafDir(self, path, dir_id)
-        dir.load_entries(dir_json)
-        return dir
+        directory = SeafDir(self, path, dir_id)
+        directory.load_entries(dir_json)
+        return directory
 
     def delete(self):
         """Remove this repo. Only the repo owner can do this"""
         self.client.delete('/api2/repos/' + self.id)
 
-    def list_history(self):
+    def list_revisions(self):
         """List the history of this repo
 
         Returns a list of :class:`RepoRevision` object.
         """
         res = self.client.get('/api/v2.1/repos/{}/history/'.format(self.id)).json()
-        return [RepoRevision(self.client, **repo) for repo in res['data']]
+        return [RepoRevision(self.client, self, **repo) for repo in res['data']]
 
-    ## Operations only the repo owner can do:
+    # Operations only the repo owner can do:
 
     def update(self, name=None, desc=None):
         """Update the name and/or description of this repo. Only the repo owner can do
@@ -96,16 +106,23 @@ class Repo:
         """
         pass
 
-    def restore(self, commit_id):
+    def revert(self, commit_id):
+        """
+
+        :param commit_id:
+        """
         pass
 
 
 class RepoRevision:
+    """
+
+    """
     __slots__ = ('client', 'repo', 'commit_id', 'time')
 
-    def __init__(self, client, **kwargs):
-        self.client = kwargs.get('client')
-        self.repo = kwargs.get('repo')
+    def __init__(self, client, repo, **kwargs):
+        self.client = client
+        self.repo = repo
         self.commit_id = kwargs.get('commit_id')
         self.time = kwargs.get('time')
 
