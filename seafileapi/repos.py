@@ -11,7 +11,7 @@ class Repos:
     def __init__(self, client):
         self.client = client
 
-    def create_repo(self, name, desc, password=None):
+    def create_repo(self, name, desc=None, password=None):
         """
 
         :param name:
@@ -19,7 +19,9 @@ class Repos:
         :param password:
         :return:
         """
-        data = {'name': name, 'desc': desc}
+        data = {'name': name}
+        if desc:
+            data.update({'desc': desc})
         if password:
             data['passwd'] = password
         repo_json = self.client.post(self.REPOS_URL, data=data).json()
