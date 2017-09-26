@@ -28,5 +28,7 @@ def test_members(group, test_account1, test_account2):
     assert member2 not in group.list_members()
 
 
-
+def test_messages(group, test_account1, test_account2):
+    member1 = group.add_member(test_account1.email)
+    member2 = group.add_member(test_account2.email)
 
