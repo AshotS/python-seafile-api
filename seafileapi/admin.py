@@ -7,12 +7,11 @@ class Account(object):
         'is_active', 'usage', 'total', 'create_time',
         'department', 'name', 'note', 'ACCOUNT_URL')
 
-    def __init__(self, client, email, **kwargs):
+    def __init__(self, client, email, **account_info):
         self.client = client
         self.email = email
         self.ACCOUNT_URL = '/api2/accounts/{}/'.format(email)
 
-        account_info = kwargs
         self.id = account_info.get('id')
         self.password = account_info.get('password')
         self.is_staff = account_info.get('is_staff')
@@ -78,13 +77,6 @@ class Account(object):
     def create(self):
         data = {'password': self.password, 'is_staff': self.is_staff or False, 'is_active': self.is_active or True}
         self.client.put(self.ACCOUNT_URL, data=data)
-
-    def update(self):
-        data = {'name': self.name, 'is_staff': self.is_staff, 'is_active': self.is_active, 'storage': self.total}
-        if self.password:
-            data.update({'password': self.password})
-        self.client.put(self.ACCOUNT_URL, data=data)
-        self._update_info()
 
     def delete(self):
         self.client.delete(self.ACCOUNT_URL)
