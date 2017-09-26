@@ -6,7 +6,7 @@ This is fork of https://github.com/haiwen/python-seafile with support some addit
 Requirements
 ------
 - Python 3.x
-- `Requests <http://www.python-requests.org/en/latest/>`
+- `Requests <http://www.python-requests.org/en/latest/>`_
 
 Getting started
 ---------------
