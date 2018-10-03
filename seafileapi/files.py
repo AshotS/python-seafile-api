@@ -53,11 +53,19 @@ class _SeafDirentBase:
         resp = self.client.delete(url)
         return resp
 
-    def rename(self):
+    def rename(self, newname):
         """
 
+        :param newname:
         """
-        pass
+        url = '/api2/repos/{}/file/{}'.format(self.repo.id, querystr(p=self.path))
+        postdata = {
+                'operation': 'rename',
+                'newname': newname
+                }
+        resp = self.client.post(url, data=postdata)
+        return resp
+
 
     def copyTo(self, dst_dir, dst_repo=None):
         """

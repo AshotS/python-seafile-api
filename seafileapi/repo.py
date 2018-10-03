@@ -35,7 +35,7 @@ class Repo:
         """
         repo_id = repo_json['id']
         repo_name = repo_json['name']
-        repo_desc = repo_json['desc']
+        repo_desc = repo_json.get('desc', '')
         encrypted = repo_json['encrypted']
         perm = repo_json['permission']
         owner = repo_json['owner']

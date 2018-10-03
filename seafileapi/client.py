@@ -84,7 +84,7 @@ class SeafileApiClient:
         return self._send_request('DELETE', *args, **kwargs)
 
     def _send_request(self, method, url, *args, **kwargs):
-        if not url.startswith('http') or url.startswith('https'):
+        if not (url.startswith('http') or url.startswith('https')):
             url = urljoin(self.server, url)
 
         headers = kwargs.get('headers', {})
