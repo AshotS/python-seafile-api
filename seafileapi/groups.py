@@ -40,6 +40,7 @@ class Group:
     """
     GROUPS_URL = '/api/v2.1/groups/{}/'
     GROUP_MEMBERS_URL = '/api/v2.1/groups/{}/members/{}'
+    GROUP_MEMBERS_BULK_URL = '/api/v2.1/groups/{}/members/{}/bulk'
     GROUP_MESSAGES_URL = '/api2/groups/{}/discussions/{}'
     __slots__ = ('client', 'id', 'name', 'owner', 'created_at', 'admins', 'avatar_url', 'wiki_enabled')
 
@@ -121,13 +122,24 @@ class Group:
         res = self.client.post(self.GROUP_MEMBERS_URL.format(self.id, ''), data={'email': email}).json()
         return self.get_member(res['email'])
 
-    def add_members(self):
+    def add_members(self, emails):
+        """
+
+        :param emails:
+        :return:
+        """
+        res = self.client.post(self.GROUP_MEMBERS_BULK_URL.format(self.id, ''), data={'emails': ','.join(emails)}).json()
+        # TODO Return 'failed' members as well?
+        return [self.get_member(member['email']) for member in res['success']]
+
+    def delete_member(self, email):
         """
 
         :param email:
         :return:
         """
-        raise NotImplemented
+        res = self.client.delete(self.GROUP_MEMBERS_URL.format(self.id, email)).json()
+        return bool(res['success'])
 
     def list_messages(self):
         """
