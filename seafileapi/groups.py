@@ -40,7 +40,7 @@ class Group:
     """
     GROUPS_URL = '/api/v2.1/groups/{}/'
     GROUP_MEMBERS_URL = '/api/v2.1/groups/{}/members/{}'
-    GROUP_MEMBERS_BULK_URL = '/api/v2.1/groups/{}/members/{}/bulk'
+    GROUP_MEMBERS_BULK_URL = '/api/v2.1/groups/{}/members/bulk'
     GROUP_MESSAGES_URL = '/api2/groups/{}/discussions/{}'
     __slots__ = ('client', 'id', 'name', 'owner', 'created_at', 'admins', 'avatar_url', 'wiki_enabled')
 
