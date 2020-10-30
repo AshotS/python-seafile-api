@@ -96,7 +96,7 @@ class SeafileApiClient:
             expected = (expected,)
         resp = requests.request(method, url, **kwargs)
         if resp.status_code not in expected:
-            msg = 'Expected {}, but get {}'.format(' or '.join(map(str, expected)), resp.status_code)
+            msg = 'Expected {}, but got {}. Error Message: {}'.format(' or '.join(map(str, expected)), resp.status_code, resp.json().get('error_msg', 'None'))
             raise ClientHttpError(resp.status_code, msg)
 
         return resp
