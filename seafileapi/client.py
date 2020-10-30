@@ -1,4 +1,5 @@
 import requests
+from json.decoder import JSONDecodeError
 from seafileapi.utils import urljoin
 from seafileapi.exceptions import ClientHttpError
 from seafileapi.repos import Repos
@@ -96,7 +97,11 @@ class SeafileApiClient:
             expected = (expected,)
         resp = requests.request(method, url, **kwargs)
         if resp.status_code not in expected:
-            msg = 'Expected {}, but got {}. Error Message: {}'.format(' or '.join(map(str, expected)), resp.status_code, resp.json().get('error_msg', 'None'))
+            try:
+                err = resp.json().get('error_msg', 'Unknown')
+            except JSONDecodeError:
+                err = 'Unknown'
+            msg = 'Expected {}, but got {}. Error Message: {}'.format(' or '.join(map(str, expected)), resp.status_code, err )
             raise ClientHttpError(resp.status_code, msg)
 
         return resp
