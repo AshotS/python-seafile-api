@@ -107,10 +107,23 @@ class Group:
 
     def list_members(self):
         """
+        Get all members from a group
+
+        Note: Endpoint uses paging
+        Ref: https://github.com/haiwen/seahub/blob/master/seahub/api2/endpoints/group_members.py#L56
 
         :return:
         """
-        members = self.client.get(self.GROUP_MEMBERS_URL.format(self.id, '')).json()
+        page=1
+        per_page=100
+        members = []
+        while True:
+            res = self.client.get(self.GROUP_MEMBERS_URL.format(
+                self.id, ''), params={"page": page, "per_page": per_page}).json()
+            members += res
+            page += 1
+            if len(res) < per_page:
+                break
         return [Member(self.client, **member) for member in members] if members else []
 
     def add_member(self, email):
