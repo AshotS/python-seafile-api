@@ -40,6 +40,7 @@ class Group:
     """
     GROUPS_URL = '/api/v2.1/groups/{}/'
     GROUP_MEMBERS_URL = '/api/v2.1/groups/{}/members/{}'
+    GROUP_MEMBERS_BULK_URL = '/api/v2.1/groups/{}/members/bulk'
     GROUP_MESSAGES_URL = '/api2/groups/{}/discussions/{}'
     __slots__ = ('client', 'id', 'name', 'owner', 'created_at', 'admins', 'avatar_url', 'wiki_enabled')
 
@@ -106,10 +107,23 @@ class Group:
 
     def list_members(self):
         """
+        Get all members from a group
+
+        Note: Endpoint uses paging
+        Ref: https://github.com/haiwen/seahub/blob/master/seahub/api2/endpoints/group_members.py#L56
 
         :return:
         """
-        members = self.client.get(self.GROUP_MEMBERS_URL.format(self.id, '')).json()
+        page=1
+        per_page=100
+        members = []
+        while True:
+            res = self.client.get(self.GROUP_MEMBERS_URL.format(
+                self.id, ''), params={"page": page, "per_page": per_page}).json()
+            members += res
+            page += 1
+            if len(res) < per_page:
+                break
         return [Member(self.client, **member) for member in members] if members else []
 
     def add_member(self, email):
@@ -121,13 +135,24 @@ class Group:
         res = self.client.post(self.GROUP_MEMBERS_URL.format(self.id, ''), data={'email': email}).json()
         return self.get_member(res['email'])
 
-    def add_members(self):
+    def add_members(self, emails):
+        """
+
+        :param emails:
+        :return:
+        """
+        res = self.client.post(self.GROUP_MEMBERS_BULK_URL.format(self.id, ''), data={'emails': ','.join(emails)}).json()
+        # TODO Return 'failed' members as well?
+        return [self.get_member(member['email']) for member in res['success']]
+
+    def delete_member(self, email):
         """
 
         :param email:
         :return:
         """
-        raise NotImplemented
+        res = self.client.delete(self.GROUP_MEMBERS_URL.format(self.id, email)).json()
+        return bool(res['success'])
 
     def list_messages(self):
         """

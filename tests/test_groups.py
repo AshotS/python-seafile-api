@@ -27,6 +27,11 @@ def test_members(group, test_account1, test_account2):
     member2.delete()
     assert member2 not in group.list_members()
 
+    member1.delete()
+    member2.delete()
+    members = group.add_members([test_account1.email, test_account2.email])
+    assert member1 in group.list_members() and member2 in group.list_members()
+
 
 def test_messages(group, test_account1, test_account2):
     member1 = group.add_member(test_account1.email)
